@@ -4,10 +4,20 @@ data Carrera = Matematica | Fisica | Computacion | Astronomia deriving Eq
 
 --b
 titulo :: Carrera -> String
-titulo Matematica = "Licenciatura en Matemática"
+titulo Matematica = "Licenciatura en Matematica"
 titulo Fisica = "Licenciatura en Física"
 titulo Computacion = "Licenciatura en Ciencias de la Computación"
 titulo Astronomia = "Licenciatura en Astronomía"
+
+-- Prueba
+--ghci> titulo Matematica
+--"Licenciatura en Matemática"
+--ghci> titulo Fisica
+--"Licenciatura en Física"
+--ghci> titulo Computacion
+--"Licenciatura en Ciencias de la Computación"
+--ghci> titulo Astronomia
+--"Licenciatura en Astronomía"
 
 --c
 data NotaBasica = Do | Re | Mi | Fa | Sol | La | Si
@@ -69,7 +79,33 @@ data Deportista = Ajedrecista                           -- Constructor sin argum
 --b ¿Cuál es el tipo del constructor Ciclista?
 -- El tipo del constructor Ciclista es toma una Modalidad y devuelve un tipo Deportista
 
+-- Prueba
+--ghci> :t Ciclista
+--Ciclista :: Modalidad -> Deportista
+
 --c
 contar_velocistas :: [Deportista] -> Int
 contar_velocistas [] = 0
-contar_velocistas (x:xs)= 1 + (contar_velocistas)
+contar_velocistas (x:xs) =
+    case x of
+        Velocista _ -> 1 + contar_velocistas xs
+        _ -> contar_velocistas xs
+
+-- Prueba
+--ghci> contar_velocistas [Velocista 180, Velocista 10]
+--2
+--ghci> contar_velocistas [Velocista 180, Velocista 10, Ciclista BMX]
+--2
+--ghci> contar_velocistas [Velocista 180, Ciclista BMX]
+--1
+
+--d
+contar_futbolista :: [Deportista] -> zona -> Int
+contar_futbolista [] z = 0
+contar_futbolista (_:xs) z = contar_futbolista xs z
+contar_futbolista (Futbolista Arco _ _ _ ) Arco = 1 + contar_futbolista xs Arco
+contar_futbolista (Futbolista Defensa _ _ _ ) Defensa = 1 + contar_futbolista xs Defensa
+contar_futbolista (Futbolista Mediocampo _ _ _ ) Mediocampo = 1 + contar_futbolista xs Mediocampo
+contar_futbolista (Futbolista Delantera _ _ _ ) Delantera = 1 + contar_futbolista xs Delantera
+--Futbolista Zona NumCamiseta PiernaHabil Altura
+--data Zona = Arco | Defensa | Mediocampo | Delantera
