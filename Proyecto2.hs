@@ -386,13 +386,78 @@ primerElemento'' (x:xs) = Just (x)
 --ghci> primerElemento'' ["x","a"]
 --Just "x"
 
+-- Definimos Show para Deportista Sino no me meuestra nada la funcion atender
+
+instance Show Zona where
+    show Arco = "Arco"
+    show Defensa = "Defensa"
+    show Mediocampo = "Mediocampo"
+    show Delantera = "Delantera"
+
+instance Show TipoReves where
+    show DosManos = "DosManos"
+    show UnaMano = "UnaMano"
+
+instance Show Modalidad where
+    show Carretera = "Carretera"
+    show Pista = "Pista"
+    show Monte = "Monte"
+    show BMX = "BMX"
+
+instance Show PiernaHabil where
+    show Izquierda = "Izquierda"
+    show Derecha = "Derecha"
+
+instance Show Deportista where
+    show Ajedrecista = "Ajedrecista"
+    show (Ciclista modalidad) = "Ciclista " ++ show modalidad
+    show (Velocista altura) = "Velocista " ++ show altura
+    show (Tenista tipoReves manoHabil altura) =
+        "Tenista " ++ show tipoReves ++ " " ++ show manoHabil ++ " " ++ show altura
+    show (Futbolista zona numCamiseta piernaHabil altura) =
+        "Futbolista " ++ show zona ++ " " ++ show numCamiseta ++ " " ++ show piernaHabil ++ " " ++ show altura
+--
+
 -- Ejercicio 7 Tipos Recursivos
 -- Definición del tipo Cola
 
 data Cola = VaciaC | Encolada Deportista Cola
 
+instance Show Cola where
+    show VaciaC = "VaciaC"
+    show (Encolada deportista cola) = show deportista ++ ", " ++ show cola
+
 -- Inciso a
 -- 1
 atender :: Cola -> Maybe Cola
 atender VaciaC = Nothing
-atender (Encolada deportista cola) = Just (cola)
+atender (Encolada _ cola) = Just cola
+
+-- Prueba
+
+--ghci> let cola1 = Encolada Ajedrecista VaciaC
+--ghci> let resultado1 = atender cola1
+--ghci> print resultado1
+--Just VaciaC
+
+--ghci> let cola2 = Encolada (Futbolista Arco 1 Derecha 175) (Encolada Ajedrecista VaciaC)
+--ghci> let resultado2 = atender cola2
+--ghci> print resultado2
+--Just Ajedrecista, VaciaC
+
+--ghci> let cola3 = Encolada (Ciclista BMX) (Encolada Ajedrecista (Encolada (Ciclista Monte) VaciaC))
+--ghci> let resultado3 = atender cola3
+--ghci> print resultado3
+--Just Ajedrecista, Ciclista Monte, VaciaC
+
+-- 2
+encolar :: Deportista -> Cola -> Cola
+encolar d VaciaC = Encolada d VaciaC
+encolar d (Encolada deportista cola) = Encolada deportista (encolar d cola)
+
+-- Prueba
+
+--ghci> encolar (Ciclista BMX) VaciaC
+--Ciclista BMX, VaciaC
+--ghci> encolar (Ciclista BMX) (Encolada Ajedrecista (Encolada (Futbolista Arco 1 Derecha 190) VaciaC))
+--Ajedrecista, Futbolista Arco 1 Derecha 190, Ciclista BMX, VaciaC
