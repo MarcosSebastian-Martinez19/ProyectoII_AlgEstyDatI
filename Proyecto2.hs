@@ -153,11 +153,27 @@ verificarZona _ _ = False
 --0
 
 -- e
--- Hacer con el colo después || preguntar en clase
---contar_futbolistasFilter :: [Deportista] -> Zona -> Int
---contar_futbolistasFilter [] z = 0
---contar_futbolistasFilter (Futbolista zona _ _ _ :xs) z =
---    length(filter (verificarZona z zona))
+-- Preguntar en clase
+contar_futbolistasFilter :: [Deportista] -> Zona -> Int
+contar_futbolistasFilter deportistas zona = length (filter (verificarZonaFutbolista zona ) deportistas)
+
+verificarZonaFutbolista :: Zona -> Deportista -> Bool
+verificarZonaFutbolista z (Futbolista zona _ _ _) = verificarZona z zona
+verificarZonaFutbolista _ _ = False
+
+-- Prueba
+-- ghci> contar_futbolistasFilter  [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190] Arco
+-- 2
+-- ghci> contar_futbolistasFilter [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190, Futbolista Mediocampo 10 Derecha 178] Mediocampo
+-- 1
+-- ghci> contar_futbolistasFilter  [] Arco
+-- 0
+-- ghci> contar_futbolistasFilter  [] Defensa
+-- 0
+-- ghci> contar_futbolistasFilter  [] Mediocampo
+-- 0
+-- ghci> contar_futbolistasFilter  [] Delantera
+-- 0
 
 -- Ejercicio 5 Definición de Clases.
 
@@ -186,7 +202,6 @@ sonidoNatural Si = 11
 --9
 --ghci> sonidoNatural Si
 --11
-
 
 -- b
 data Alteracion = Bemol | Natural | Sostenido
