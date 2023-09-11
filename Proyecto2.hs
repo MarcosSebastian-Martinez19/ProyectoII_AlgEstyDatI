@@ -133,11 +133,11 @@ verificarZona _ _ = False
 --0
 
 -- La segunda
-contar_futbolistas' :: [Deportista] -> Zona -> Int
-contar_futbolistas' [] z = 0
-contar_futbolistas' (Futbolista zona _ _ _ :xs) z = case verificarZona z zona of
-    True -> 1 + contar_futbolistas xs z
-    False -> contar_futbolistas xs z
+--contar_futbolistas' :: [Deportista] -> Zona -> Int
+--contar_futbolistas' [] z = 0
+--contar_futbolistas' (Futbolista zona _ _ _ :xs) z = case verificarZona z zona of
+--    True -> 1 + contar_futbolistas xs z
+--    False -> contar_futbolistas xs z
 -- Prueba
 --ghci> contar_futbolistas' [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190] Arco
 --2
@@ -268,7 +268,6 @@ instance Eq NotaMusical
 
 --f
 -- Definamos Ord para NotaMusical
--- Preguntar en clase si está bien
 
 instance Ord NotaMusical where
     (Nota nota1 alteracion1) <= (Nota nota2 alteracion2) = sonidoCromatico (Nota nota1 alteracion1) <= sonidoCromatico(Nota nota2 alteracion2)
@@ -364,16 +363,10 @@ busca (Encolada deportista cola) z = case deportista of
     Futbolista z _ _ _  -> Just deportista
     _ -> busca cola z
 
-
-
-
-
-
-
-
-
-
-
+-- Responder a la b del tipo de Cola
+-- El tipo Cola se parece al Tipo Palabra de la filmina del teórico.
+-- data Cola = VaciaC | Encolada Deportista Cola
+-- data Palabra = PVacia | Agregar Char Palabra
 
 -- Ejercicio 8 Tipos recursivos y polimórficos.
 data ListaAsoc a b = Vacia | Nodo a b (ListaAsoc a b)
@@ -382,6 +375,8 @@ type Diccionario = ListaAsoc String String
 type Padron = ListaAsoc Int String
 
 -- A
+-- El tipo ListaAsoc para representar la información almacenada en una guía telefónica se debe instanciar así:
+
 type GuiaTelefonica = ListaAsoc Nombre Int
 type Nombre = String
 
@@ -390,3 +385,12 @@ type Nombre = String
 la_long :: ListaAsoc a b -> Int
 la_long Vacia = 0
 la_long (Nodo x y la) = 1 + (la_long la)
+
+-- Prueba
+
+--ghci> la_long (Nodo "String" 10 (Nodo "String2" 20 Vacia))
+--2
+--ghci> la_long (Nodo "Marcos" False (Nodo "Sebas" True Vacia))
+--2
+--ghci> la_long (Nodo "Marcos" False (Nodo "Sebas" True (Nodo "Hola" False Vacia)))
+--3
