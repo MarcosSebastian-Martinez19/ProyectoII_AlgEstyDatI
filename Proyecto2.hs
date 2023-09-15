@@ -370,6 +370,7 @@ busca (Encolada deportista cola) z = case deportista of
 
 -- Ejercicio 8 Tipos recursivos y polimórficos.
 data ListaAsoc a b = Vacia | Nodo a b (ListaAsoc a b)
+    deriving Show
 
 type Diccionario = ListaAsoc String String
 type Padron = ListaAsoc Int String
@@ -394,3 +395,45 @@ la_long (Nodo x y la) = 1 + (la_long la)
 --2
 --ghci> la_long (Nodo "Marcos" False (Nodo "Sebas" True (Nodo "Hola" False Vacia)))
 --3
+
+-- 2
+
+la_concat :: ListaAsoc a b -> ListaAsoc a b -> ListaAsoc a b
+la_concat Vacia (Nodo x y la) = (Nodo x y la)
+la_concat (Nodo x y la) Vacia = (Nodo x y la)
+la_concat (Nodo x y la) mb = Nodo x y (la_concat la mb)
+
+lista1 = (Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" Vacia))
+lista2 = (Nodo "Tomas" "Juan" Vacia)
+
+-- Prueba
+--ghci> la_concat lista1 lista2
+--Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Tomas" "Juan" Vacia))
+
+-- 3
+la_agregar :: Eq a => ListaAsoc a b -> a -> b -> ListaAsoc a b
+la_agregar Vacia z w = Vacia
+la_agregar (Nodo x y la) z w | x == z = (Nodo x w la)
+                             | x /= z = la_agregar (Nodo z w la) z w
+
+-- Prueba
+-- ghci> la_agregar (Nodo "Tomas" "Alex" Vacia) "Marcos" "Alex"
+-- Nodo "Marcos" "Alex" Vacia
+-- ghci> la_agregar (Nodo "Tomas" "Alex"(Nodo "Gonzalo" "Tomas" Vacia)) "Marcos" "Alex"
+-- Nodo "Marcos" "Alex" (Nodo "Gonzalo" "Tomas" Vacia)
+-- ghci> la_agregar Vacia "Marcos" "Alex"
+-- Vacia
+
+la_pares :: ListaAsoc a b -> [(a,b)]
+la_pares Vacia = []
+la_pares (Nodo x y la) = (x, y) : (la_pares la)
+
+-- Pruebas
+-- ghci> la_pares Vacia
+-- []
+-- ghci> la_pares lista2
+-- [("Tomas","Juan")]
+-- ghci> la_pares lista1
+-- [("Tomas","Juan"),("Marcos","Alex")]
+
+la_busca :: Eq a => ListaAsoc a b -> a -> Maybe
