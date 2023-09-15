@@ -133,11 +133,11 @@ verificarZona _ _ = False
 --0
 
 -- La segunda
---contar_futbolistas' :: [Deportista] -> Zona -> Int
---contar_futbolistas' [] z = 0
---contar_futbolistas' (Futbolista zona _ _ _ :xs) z = case verificarZona z zona of
---    True -> 1 + contar_futbolistas xs z
---    False -> contar_futbolistas xs z
+contar_futbolistas' :: [Deportista] -> Zona -> Int
+contar_futbolistas' [] z = 0
+contar_futbolistas' (Futbolista zona _ _ _ :xs) z = case verificarZona z zona of
+   True -> 1 + contar_futbolistas xs z
+   False -> contar_futbolistas xs z
 -- Prueba
 --ghci> contar_futbolistas' [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190] Arco
 --2
@@ -153,7 +153,6 @@ verificarZona _ _ = False
 --0
 
 -- e
--- Preguntar en clase
 contar_futbolistasFilter :: [Deportista] -> Zona -> Int
 contar_futbolistasFilter deportistas zona = length (filter (verificarZonaFutbolista zona ) deportistas)
 
@@ -330,7 +329,7 @@ instance Show Cola where
     show VaciaC = "VaciaC"
     show (Encolada deportista cola) = show deportista ++ ", " ++ show cola
 
--- Inciso adata Cola = VaciaC | Encolada Deportista Cola
+-- Inciso a
 -- 1
 atender :: Cola -> Maybe Cola
 atender VaciaC = Nothing
