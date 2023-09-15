@@ -436,4 +436,31 @@ la_pares (Nodo x y la) = (x, y) : (la_pares la)
 -- ghci> la_pares lista1
 -- [("Tomas","Juan"),("Marcos","Alex")]
 
-la_busca :: Eq a => ListaAsoc a b -> a -> Maybe
+la_busca :: Eq a => ListaAsoc a b -> a -> Maybe b
+la_busca Vacia z = Nothing
+la_busca (Nodo x y la) z | x == z = Just (y)
+                         | otherwise = Nothing
+
+-- ghci> la_busca lista1 "Tomas"
+-- Just "Juan"
+-- ghci> la_busca lista1 "Marcos"
+-- Nothing
+-- ghci> la_busca Vacia "Hola"
+-- Nothing
+
+la_borrar :: Eq a => a -> ListaAsoc a b -> ListaAsoc a b
+la_borrar z Vacia = Vacia
+la_borrar z (Nodo x y la) | z == x = la
+                          | z /= x = Nodo x y (la_borrar z la)
+
+lista3 = (Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia)))
+
+-- Prueba
+-- ghci> la_borrar "H" lista3
+-- Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia))
+-- ghci> la_borrar "alex" lista3
+-- Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia))
+-- ghci> la_borrar "Marcos" lista3
+-- Nodo "Tomas" "Juan" (Nodo "Rocio" "Gonzalo" Vacia)
+-- ghci> la_borrar "Tomas" lista3
+-- Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia)
