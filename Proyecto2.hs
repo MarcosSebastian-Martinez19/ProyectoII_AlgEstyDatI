@@ -102,8 +102,6 @@ contar_velocistas (x:xs) =
 --1
 
 --d
--- 2 formas de hacerlo
--- La primera
 contar_futbolistas :: [Deportista] -> Zona -> Int
 contar_futbolistas [] z = 0
 contar_futbolistas (Futbolista zona _ _ _:xs) z
@@ -130,26 +128,6 @@ verificarZona _ _ = False
 --ghci> contar_futbolistas [] Mediocampo
 --0
 --ghci> contar_futbolistas [] Delantera
---0
-
--- La segunda
-contar_futbolistas' :: [Deportista] -> Zona -> Int
-contar_futbolistas' [] z = 0
-contar_futbolistas' (Futbolista zona _ _ _ :xs) z = case verificarZona z zona of
-   True -> 1 + contar_futbolistas xs z
-   False -> contar_futbolistas xs z
--- Prueba
---ghci> contar_futbolistas' [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190] Arco
---2
---ghci> contar_futbolistas' [Futbolista Arco 10 Izquierda 180, Futbolista Arco 5 Derecha 170, Ciclista Pista, Ajedrecista, Futbolista Defensa 12 Izquierda 190, Futbolista Mediocampo 10 Derecha 178] Mediocampo
---1
---ghci> contar_futbolistas' [] Arco
---0
---ghci> contar_futbolistas' [] Defensa
---0
---ghci> contar_futbolistas' [] Mediocampo
---0
---ghci> contar_futbolistas' [] Delantera
 --0
 
 -- e
@@ -251,8 +229,6 @@ sonidoCromatico (Nota nota alteracion) =
 -- e
 -- Incluí el tipo NotaMusical a la clase Eq de manera tal que dos notas que tengan el mismo valor de sonidoCromatico se consideren iguales.
 
--- Definamos Eq para NotaMusical
-
 instance Eq NotaMusical
     where
         (Nota nota1 alteracion1) == (Nota nota2 alteracion2) = sonidoCromatico(Nota nota1 alteracion1) == sonidoCromatico(Nota nota2 alteracion2)
@@ -294,31 +270,6 @@ primerElemento xs = Just (xs !! 0)
 --Just "x"
 --ghci> primerElemento ["x","a"]
 --Just "x"
-
-primerElemento' :: [a] -> Maybe a
-primerElemento' [] = Nothing
-primerElemento' xs = Just (head xs)
-
--- Prueba
---ghci> primerElemento' []
---Nothing
---ghci> primerElemento' ["x"]
---Just "x"
---ghci> primerElemento' ["x","a"]
---Just "x"
-
-primerElemento'' :: [a] -> Maybe a
-primerElemento'' [] = Nothing
-primerElemento'' (x:xs) = Just (x)
-
--- Prueba
---ghci> primerElemento'' []
---Nothing
---ghci> primerElemento'' ["x"]
---Just "x"
---ghci> primerElemento'' ["x","a"]
---Just "x"
-
 
 -- Ejercicio 7 Tipos Recursivos
 -- Definición del tipo Cola
@@ -362,7 +313,7 @@ busca (Encolada deportista cola) z = case deportista of
     Futbolista z _ _ _  -> Just deportista
     _ -> busca cola z
 
--- Responder a la b del tipo de Cola
+-- b
 -- El tipo Cola se parece al Tipo Palabra de la filmina del teórico.
 -- data Cola = VaciaC | Encolada Deportista Cola
 -- data Palabra = PVacia | Agregar Char Palabra
@@ -402,12 +353,12 @@ la_concat Vacia (Nodo x y la) = (Nodo x y la)
 la_concat (Nodo x y la) Vacia = (Nodo x y la)
 la_concat (Nodo x y la) mb = Nodo x y (la_concat la mb)
 
-lista1 = (Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" Vacia))
-lista2 = (Nodo "Tomas" "Juan" Vacia)
+lista1 = (Nodo "Marcos" 20 (Nodo "Sebastian" 15 Vacia))
+lista2 = (Nodo "Sebastian" 25 Vacia)
 
 -- Prueba
 --ghci> la_concat lista1 lista2
---Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Tomas" "Juan" Vacia))
+--Nodo "Marcos" 20 (Nodo "Sebastian" 15 (Nodo "Sebastian" 25 Vacia))
 
 -- 3
 la_agregar :: Eq a => ListaAsoc a b -> a -> b -> ListaAsoc a b
@@ -423,43 +374,51 @@ la_agregar (Nodo x y la) z w | x == z = (Nodo x w la)
 -- ghci> la_agregar Vacia "Marcos" "Alex"
 -- Vacia
 
+-- 4
 la_pares :: ListaAsoc a b -> [(a,b)]
 la_pares Vacia = []
 la_pares (Nodo x y la) = (x, y) : (la_pares la)
 
 -- Pruebas
--- ghci> la_pares Vacia
--- []
--- ghci> la_pares lista2
--- [("Tomas","Juan")]
--- ghci> la_pares lista1
--- [("Tomas","Juan"),("Marcos","Alex")]
+--ghci> la_pares Vacia
+--[]
+--ghci> la_pares lista2
+--[("Sebastian",25)]
+--ghci> la_pares lista1
+--[("Marcos",20),("Sebastian",15)]
 
+-- 5
 la_busca :: Eq a => ListaAsoc a b -> a -> Maybe b
 la_busca Vacia z = Nothing
 la_busca (Nodo x y la) z | x == z = Just (y)
                          | otherwise = Nothing
 
--- ghci> la_busca lista1 "Tomas"
--- Just "Juan"
--- ghci> la_busca lista1 "Marcos"
--- Nothing
--- ghci> la_busca Vacia "Hola"
--- Nothing
+-- Pruebas
+--ghci> la_busca lista1 "Marcos"
+--Just 20
+--ghci> la_busca lista1 "Hola"
+--Nothing
+--ghci> la_busca Vacia "Marcos"
+--Nothing
+--ghci> la_busca lista2 "Sebastian"
+--Just 25
 
+-- 6
 la_borrar :: Eq a => a -> ListaAsoc a b -> ListaAsoc a b
 la_borrar z Vacia = Vacia
 la_borrar z (Nodo x y la) | z == x = la
                           | z /= x = Nodo x y (la_borrar z la)
 
-lista3 = (Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia)))
+lista3 = (Nodo "Marcos" True (Nodo "Sebastian" False (Nodo "Martinez" True Vacia)))
 
 -- Prueba
--- ghci> la_borrar "H" lista3
--- Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia))
--- ghci> la_borrar "alex" lista3
--- Nodo "Tomas" "Juan" (Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia))
--- ghci> la_borrar "Marcos" lista3
--- Nodo "Tomas" "Juan" (Nodo "Rocio" "Gonzalo" Vacia)
--- ghci> la_borrar "Tomas" lista3
--- Nodo "Marcos" "Alex" (Nodo "Rocio" "Gonzalo" Vacia)
+--ghci> la_borrar "H" lista3
+--Nodo "Marcos" True (Nodo "Sebastian" False (Nodo "Martinez" True Vacia))
+--ghci> la_borrar "Marcos" lista3
+--Nodo "Sebastian" False (Nodo "Martinez" True Vacia)
+--ghci> la_borrar "Sebastian" lista3
+--Nodo "Marcos" True (Nodo "Martinez" True Vacia)
+--ghci> la_borrar "Martinez" lista3
+--Nodo "Marcos" True (Nodo "Sebastian" False Vacia)
+--ghci> la_borrar "Martinez" Vacia
+--Vacia
