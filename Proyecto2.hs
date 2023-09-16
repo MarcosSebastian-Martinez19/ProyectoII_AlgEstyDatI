@@ -349,6 +349,7 @@ la_long (Nodo x y la) = 1 + (la_long la)
 -- 2
 
 la_concat :: ListaAsoc a b -> ListaAsoc a b -> ListaAsoc a b
+la_concat Vacia Vacia = Vacia
 la_concat Vacia (Nodo x y la) = (Nodo x y la)
 la_concat (Nodo x y la) Vacia = (Nodo x y la)
 la_concat (Nodo x y la) mb = Nodo x y (la_concat la mb)
@@ -357,22 +358,30 @@ lista1 = (Nodo "Marcos" 20 (Nodo "Sebastian" 15 Vacia))
 lista2 = (Nodo "Sebastian" 25 Vacia)
 
 -- Prueba
---ghci> la_concat lista1 lista2
---Nodo "Marcos" 20 (Nodo "Sebastian" 15 (Nodo "Sebastian" 25 Vacia))
+-- ghci> la_concat Vacia Vacia
+-- Vacia
+-- ghci> la_concat Vacia lista2
+-- Nodo "Sebastian" 25 Vacia
+-- ghci> la_concat Vacia lista1
+-- Nodo "Marcos" 20 (Nodo "Sebastian" 15 Vacia)
+-- ghci> la_concat lista1 Vacia
+-- Nodo "Marcos" 20 (Nodo "Sebastian" 15 Vacia)
+-- ghci> la_concat lista2 Vacia
+-- Nodo "Sebastian" 25 Vacia
 
 -- 3
 la_agregar :: Eq a => ListaAsoc a b -> a -> b -> ListaAsoc a b
-la_agregar Vacia z w = Vacia
+la_agregar Vacia z w = Nodo z w Vacia
 la_agregar (Nodo x y la) z w | x == z = (Nodo x w la)
-                             | x /= z = la_agregar (Nodo z w la) z w
+                             | otherwise = Nodo x y (la_agregar la z w)
 
 -- Prueba
 -- ghci> la_agregar (Nodo "Tomas" "Alex" Vacia) "Marcos" "Alex"
--- Nodo "Marcos" "Alex" Vacia
+-- Nodo "Tomas" "Alex" (Nodo "Marcos" "Alex" Vacia)
 -- ghci> la_agregar (Nodo "Tomas" "Alex"(Nodo "Gonzalo" "Tomas" Vacia)) "Marcos" "Alex"
--- Nodo "Marcos" "Alex" (Nodo "Gonzalo" "Tomas" Vacia)
+-- Nodo "Tomas" "Alex" (Nodo "Gonzalo" "Tomas" (Nodo "Marcos" "Alex" Vacia))
 -- ghci> la_agregar Vacia "Marcos" "Alex"
--- Vacia
+-- Nodo "Marcos" "Alex" Vacia
 
 -- 4
 la_pares :: ListaAsoc a b -> [(a,b)]
@@ -391,7 +400,7 @@ la_pares (Nodo x y la) = (x, y) : (la_pares la)
 la_busca :: Eq a => ListaAsoc a b -> a -> Maybe b
 la_busca Vacia z = Nothing
 la_busca (Nodo x y la) z | x == z = Just (y)
-                         | otherwise = Nothing
+                         | otherwise = la_busca la z
 
 -- Pruebas
 --ghci> la_busca lista1 "Marcos"
