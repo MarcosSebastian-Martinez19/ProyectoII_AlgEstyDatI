@@ -51,6 +51,25 @@ minimoElemento' :: (Bounded a, Ord a) => [a] -> a
 minimoElemento' [] = minBound
 minimoElemento' (x:xs) = min x (minimoElemento xs)
 
+listaEjemplo1 :: [Int]
+listaEjemplo1 = [1,5,10]
+listaEjemplo2 :: [Int]
+listaEjemplo2 = []
+listaEjemplo3 :: [Bool]
+listaEjemplo3 = [True, False]
+listaEjemplo4 :: [Bool]
+listaEjemplo4 = []
+
+-- Prueba
+-- ghci> minimoElemento' listaEjemplo1
+-- 1
+-- ghci> minimoElemento' listaEjemplo2
+-- -9223372036854775808
+-- ghci> minimoElemento' listaEjemplo3
+-- False
+-- ghci> minimoElemento' listaEjemplo4
+-- False
+
 --c
 -- Prueba
 --ghci> minimoElemento [Fa, La, Sol, Re, Fa]
@@ -58,6 +77,7 @@ minimoElemento' (x:xs) = min x (minimoElemento xs)
 
 -- Ejercicio 4 Sinonimos de tipos; constructores con parámetros.
 
+-- a
 -- Sinónimos de tipo
 type Altura = Int
 type NumCamiseta = Int
@@ -78,6 +98,7 @@ data Deportista = Ajedrecista                           -- Constructor sin argum
     | Tenista TipoReves ManoHabil Altura                -- Constructor con tres argumentos
     | Futbolista Zona NumCamiseta PiernaHabil Altura    -- Constructor con 4 argumentos
     deriving Show
+
 --b ¿Cuál es el tipo del constructor Ciclista?
 -- El tipo del constructor Ciclista es toma una Modalidad y devuelve un tipo Deportista
 
